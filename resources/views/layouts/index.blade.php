@@ -64,21 +64,18 @@
                     <th scope="row">{{$company->id}}</th>
                     <td>{{$company->name}}</td>
                     <td>{{$company->email}}</td>
-                    <td>{{$company->logo}}</td>
+                    <td><img src="{{ url('storage/'.$company->image) }}" alt="Logo" title="" /></td>
                     <td>{{$company->web}}</td>
                     <td>
-                        <form action="#" method="POST">
-    
-                            <a href="{{ route('edit') }}">
+                            <a href="{{route('edit')}}">
                               <button>Edit</button>
                             </a>
-    
-                            @csrf
-                            @method('DELETE')
-    
-                            <button type="submit" title="delete" style="border: none; background-color:transparent;">
-                            </button>
-                        </form>
+                            <form action="" method="POST">
+                              {{ csrf_field() }}
+                              <input type="hidden" name="_method" value="DELETE" />
+                              <button type="submit" onclick="return confirm('Are you sure to delete this data');"></button>
+                          </form>
+
                     </td>
                 </tr>
             @endforeach
@@ -93,6 +90,8 @@
       </div>
     </div>
   </section>
+
+  <a href="{{ route('create')}}"><button type="button" class="btn btn-outline-success">Add New Company</button></a>
 
 </main><!-- End #main -->
 

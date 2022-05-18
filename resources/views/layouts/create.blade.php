@@ -45,7 +45,8 @@
                   <h5 class="card-title">Add New Companies</h5>
     
                   <!-- Horizontal Form -->
-                  <form action="{{ route('dashboard')}}" method="POST">
+                  <form action="{{ route('store')}}" method="POST" enctype="multipart/form-data">
+                    {{ csrf_field() }}
                     <div class="row mb-3">
                       <label for="inputEmail3" class="col-sm-2 col-form-label">Company Name</label>
                       <div class="col-sm-10">

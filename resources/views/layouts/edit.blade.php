@@ -1,59 +1,92 @@
 @extends('layouts.app')
 
-@section('content')
+@section('main')
+    
+{{-- <div class="pagetitle">
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title --> --}}
+
+
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Company</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <!-- <li class="breadcrumb-item">Tables</li> -->
+        <li class="breadcrumb-item active">Companies</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
     <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Add New Company</h2>
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Companies Information</h5>
+            <!-- <p>Add lightweight datatables to your project with using the <a href="https://github.com/fiduswriter/Simple-DataTables" target="_blank">Simple DataTables</a> library. Just add <code>.datatable</code> class name to any table you wish to conver to a datatable</p> -->
+
+            @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <p></p>
             </div>
-            <div class="pull-right">
-                <a class="btn btn-primary" href="" title="Go back"> <i class="fas fa-backward "></i> </a>
-            </div>
+             @endif
+           
+             <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Edit Companies</h5>
+    
+                  <!-- Horizontal Form -->
+                  <form action="{{ route('update')}}" method="POST" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Company Name</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputText" name="name">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                      <div class="col-sm-10">
+                        <input type="email" class="form-control" id="inputEmail" name="email">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Website</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputWeb" name="web">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Logo</label>
+                      <div class="col-sm-10">
+                        <input type="file" class="form-control" id="inputLogo" name="image">
+                      </div>
+                    </div>
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <button type="reset" class="btn btn-secondary">Reset</button>
+                    </div>
+                  </form><!-- End Horizontal Form -->
+    
+                </div>
+              </div>
+
+          </div>
         </div>
+
+      </div>
     </div>
+  </section>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>Error!</strong> 
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li></li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <form action="" method="POST" >
-        @csrf
+</main><!-- End #main -->
 
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Name:</strong>
-                    <input type="text" name="name" class="form-control" placeholder="Name">
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Email:</strong>
-                    <input type="email" name="email" class="form-control" placeholder="Email">
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Website:</strong>
-                    <input type="text" name="web" class="form-control" placeholder="Website">
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Logo:</strong>
-                    <input type="file" name="image" class="form-control" placeholder="Logo">
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
-
-    </form>
 @endsection

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+
 
 class CompanyController extends Controller
 {
@@ -14,7 +16,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::latest()->paginate(5);
+        $companies = Company::orderBy('id')->paginate(5);
 
         return view('layouts.index', compact('companies'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -27,36 +29,38 @@ class CompanyController extends Controller
      */
     public function create(Request $request)
     {
-        $rules = [
-			'name' => 'required',
-            'email' => 'required',
-            'web' => 'required',
-            'image' => 'required|image|mimes:jpeg,bmp,png|dimensions:min_width=100,min_height=100'
-		];
-		$validator = Validator::make($request->all(),$rules);
-		if ($validator->fails()) {
-			return redirect('insert')
-			->withInput()
-			->withErrors($validator);
-		}
-		else{
-            $data = $request->input();
-			try{
-				$company = new StudInsert;
-                $company->name = $data['name'];
-                $company->email = $data['email'];
-                $company->web = $data['web'];
+        return view('layouts.create');
 
-                $path = $request->file('image')->store('public/images');
-                $company->image = $path;
+        // $rules = [
+		// 	'name' => 'required',
+        //     'email' => 'required',
+        //     'web' => 'required',
+        //     'image' => 'required|image|mimes:jpeg,bmp,png|dimensions:min_width=100,min_height=100'
+		// ];
+		// $validator = Validator::make($request->all(),$rules);
+		// if ($validator->fails()) {
+		// 	return redirect('insert')
+		// 	->withInput()
+		// 	->withErrors($validator);
+		// }
+		// else{
+        //     $data = $request->input();
+		// 	try{
+		// 		$company = new Company;
+        //         $company->name = $data['name'];
+        //         $company->email = $data['email'];
+        //         $company->web = $data['web'];
 
-				$company->save();
-				return redirect('insert')->with('status',"Insert successfully");
-			}
-			catch(Exception $e){
-				return redirect('insert')->with('failed',"Operation failed");
-			}
-		}
+        //         $path = $request->file('image')->store('public/images');
+        //         $company->image = $path;
+
+		// 		$company->save();
+		// 		return redirect('dashboard')->with('status',"Insert successfully");
+		// 	}
+		// 	catch(Exception $e){
+		// 		return redirect('dashboard')->with('failed',"Operation failed");
+		// 	}
+		// }
         // return view('layouts.create');
     }
 
@@ -68,6 +72,8 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
+        // return view('layouts.create');
+
         $request->validate([
             'name' => 'required',
             'email' => 'required',
@@ -75,10 +81,22 @@ class CompanyController extends Controller
             'image' => 'required|image|mimes:jpeg,bmp,png|dimensions:min_width=100,min_height=100'
         ]);
 
-        Company::create($request->all());
+        $data = $request->all();
+        $company = new Company;
+        $company->name = $data['name'];
+        $company->email = $data['email'];
+        $company->web = $data['web'];
 
-        return redirect()->route('layouts.index')
-            ->with('success', 'Company created successfully.');
+        $path = $request->file('image')->store('public/images');
+        $company->image = $path;
+
+        $company->save();
+
+        $companies = Company::orderBy('id')->paginate(5);
+
+        // return view('layouts.index', compact('companies'))
+        //     ->with('i', (request()->input('page', 1) - 1) * 5);
+            return redirect()->route('dashboard');
     }
 
     /**
@@ -100,7 +118,7 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
-        return view('layouts.edit', compact('companies'));
+        return view('layouts.edit');
     }
 
     /**
@@ -110,19 +128,21 @@ class CompanyController extends Controller
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Company $company)
+    public function update(Request $request, Company $company,$id)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'web' => 'required',
-            'image' => 'required|image|mimes:jpeg,bmp,png|dimensions:min_width=100,min_height=100'
-        ]);
+        // $request->validate([
+        //     'name' => 'required',
+        //     'email' => 'required',
+        //     'web' => 'required',
+        //     'image' => 'required|image|mimes:jpeg,bmp,png|dimensions:min_width=100,min_height=100'
+        // ]);
 
         $company->update($request->all());
 
-        return redirect()->route('layouts.index')
-            ->with('success', 'Company updated successfully');
+        return redirect()->route('dashboard');
+
+        // return redirect()->route('layouts.index')
+        //     ->with('success', 'Company updated successfully');
     }
 
     /**
@@ -137,7 +157,8 @@ class CompanyController extends Controller
         $company = Company::findOrFail($id);
         $company->delete();
 
-        return redirect()->route('layouts.index')
-            ->with('success', 'Company deleted successfully');
+        return redirect()->route('dashboard');
+        // return redirect()->route('layouts.index')
+        //     ->with('success', 'Company deleted successfully');
     }
 }
